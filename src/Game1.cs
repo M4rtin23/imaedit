@@ -24,7 +24,6 @@ public class Game1 : Game{
 
 	public static bool isPainting = false;
 	
-//	private static GameBuilder.Shapes.RectangleF[,] pixels = new GameBuilder.Shapes.RectangleF[width,height];
 	private Microsoft.Xna.Framework.Color selectedColor = Microsoft.Xna.Framework.Color.Pink;
 
 	public static Microsoft.Xna.Framework.Color[] colorList = new Microsoft.Xna.Framework.Color[height*width];
@@ -55,16 +54,6 @@ public class Game1 : Game{
     protected override void Update(GameTime gameTime){
 		if(Mouse.GetState().LeftButton == ButtonState.Pressed){
 			if(isPainting){
-			/*	for(int i = 0; i < width; i++){
-					for(int j = 0; j < height; j++){
-						if(pixels[i,j].Contains(Mouse.GetState().Position.ToVector2()/scaling-position/scaling)){
-							pixels[i,j].SetColor(selectedColor);
-
-						}
-					}
-				}
-				*/
-
 				try{
 					int i = (int)((Mouse.GetState().Position.X-position.X)/size/scaling);
 					int j = (int)((Mouse.GetState().Position.Y-position.Y)/size/scaling);
