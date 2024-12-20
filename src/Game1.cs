@@ -16,7 +16,7 @@ public class Game1 : Game{
 	public static float rotationY = 0;
 	public static float rotationZ = 0;
 
-	public static Vector2 position = new Vector2(100,100);
+	public static Vector2 position;
 
 	public static Vector2 startingPosition;
 	public static Vector2 endingPosition;
@@ -27,11 +27,13 @@ public class Game1 : Game{
 	private Microsoft.Xna.Framework.Color selectedColor = Microsoft.Xna.Framework.Color.Pink;
 
 	public static Microsoft.Xna.Framework.Color[] colorList = new Microsoft.Xna.Framework.Color[height*width];
+	int swv;
 
     public Game1(){
         _graphics = new GraphicsDeviceManager(this);
         _graphics.PreferredBackBufferWidth = 1400;
         _graphics.PreferredBackBufferHeight = 800;
+        position = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight)/2;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -55,8 +57,8 @@ public class Game1 : Game{
 		if(Mouse.GetState().LeftButton == ButtonState.Pressed){
 			if(isPainting){
 				try{
-					int i = (int)((Mouse.GetState().Position.X-position.X)/scaling);
-					int j = (int)((Mouse.GetState().Position.Y-position.Y)/scaling);
+					int i = (int)((Mouse.GetState().Position.X-position.X)/scaling+width/2);
+					int j = (int)((Mouse.GetState().Position.Y-position.Y)/scaling+height/2);
 					colorList[j*width+i] = selectedColor;
 
 				}catch{}
@@ -112,10 +114,10 @@ public class Game1 : Game{
 		}
 
         if (Keyboard.GetState().IsKeyDown(Keys.OemMinus)){
-			scaling -= .05f;
+			scaling /= 1.05f;
 		}
         if (Keyboard.GetState().IsKeyDown(Keys.Add)){
-			scaling += .05f;
+			scaling *= 1.05f;
 		}
         /*if (Keyboard.GetState().IsKeyDown(Keys.Left)){
 			rotationZ -= .05f;
@@ -136,17 +138,20 @@ public class Game1 : Game{
         if (Keyboard.GetState().IsKeyDown(Keys.S)){
 			rotationX +=.0005f;
 		}
-        if (Keyboard.GetState().IsKeyDown(Keys.F1)){
-			isPainting = true;
+		isPainting = !Keyboard.GetState().IsKeyDown(Keys.LeftControl);
+
+
+		if(!isPainting){
+			int diff = swv - Mouse.GetState().ScrollWheelValue;
+			if(swv - Mouse.GetState().ScrollWheelValue > 0){
+				scaling *= (1 -	 diff/20f/120f);
+			}
+			if(swv - Mouse.GetState().ScrollWheelValue < 0){
+				scaling *= (1 - diff/20f/120f);
+			}
 		}
-        if (Keyboard.GetState().IsKeyDown(Keys.F2)){
-			isPainting = false;
-		}
-
-
-        // TODO: Add your update logic here
-
-        base.Update(gameTime);
+		swv = Mouse.GetState().ScrollWheelValue;
+		base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
@@ -158,7 +163,7 @@ public class Game1 : Game{
 		texture.SetData(colorList);
 
 		_spriteBatch.Begin(transformMatrix: Matrix.CreateScale(scaling)*Matrix.CreateRotationZ(rotationZ)*Matrix.CreateRotationY(rotationY)*Matrix.CreateRotationX(rotationX)*Matrix.CreateTranslation(position.X, position.Y, 0), samplerState:  SamplerState.PointClamp);
-		_spriteBatch.Draw(texture, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
+		_spriteBatch.Draw(texture, -new Vector2(width, height)/2, Microsoft.Xna.Framework.Color.White);
 		_spriteBatch.End();
 
 		_spriteBatch.Begin();
