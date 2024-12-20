@@ -24,10 +24,10 @@ public class Game1 : Game{
 
 	public static bool isPainting = false;
 	
-	private static GameBuilder.Shapes.RectangleF[,] pixels = new GameBuilder.Shapes.RectangleF[width,height];
+//	private static GameBuilder.Shapes.RectangleF[,] pixels = new GameBuilder.Shapes.RectangleF[width,height];
 	private Microsoft.Xna.Framework.Color selectedColor = Microsoft.Xna.Framework.Color.Pink;
 
-	public Microsoft.Xna.Framework.Color[] colorList = new Microsoft.Xna.Framework.Color[height*width];
+	public static Microsoft.Xna.Framework.Color[] colorList = new Microsoft.Xna.Framework.Color[height*width];
 
     public Game1(){
         _graphics = new GraphicsDeviceManager(this);
@@ -38,14 +38,9 @@ public class Game1 : Game{
     }
 
     protected override void Initialize(){
-		for(int i = 0; i < width; i++){
-			for(int j = 0; j < height; j++){
-				pixels[i,j] = new GameBuilder.Shapes.RectangleF(size*i,size*j,size,size);
-			}
-		}
 		for(int i = 0; i < height; i++){
 			for(int j = 0; j < width; j++){
-				colorList[i*width+j] = pixels[j,i].GetColor();
+				colorList[i*width+j] = Microsoft.Xna.Framework.Color.White;
 			}
 
 		}
@@ -73,9 +68,7 @@ public class Game1 : Game{
 				try{
 					int i = (int)((Mouse.GetState().Position.X-position.X)/size/scaling);
 					int j = (int)((Mouse.GetState().Position.Y-position.Y)/size/scaling);
-					pixels[i,j].SetColor(selectedColor);
-
-					colorList[j*width+i] = selectedColor;//pixels[j,i].GetColor();
+					colorList[j*width+i] = selectedColor;
 
 				}catch{}
 
@@ -193,8 +186,8 @@ public class Game1 : Game{
 		Bitmap bitmap = new Bitmap(width, height);
 		for (var x = 0; x < bitmap.Width; x++){
 			for (var y = 0; y < bitmap.Height; y++){
-				bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(pixels[x,y].GetColor().A, pixels[x,y].GetColor().R, pixels[x,y].GetColor().G, pixels[x,y].GetColor().B));
-			}
+				bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(colorList[y*width+x].A, colorList[y*width+x].R, colorList[y*width+x].G, colorList[y*width+x].B));
+				}
 		}
 		bitmap.Save("/home/martin/image.png");		
 	}
