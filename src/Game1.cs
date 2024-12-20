@@ -9,8 +9,8 @@ namespace imaedit;
 public class Game1 : Game{
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-	private float scaling = 1;
-	public static int height = 50*5, width = 80*5, size = 1;
+	private float scaling = 5;
+	public static int height = 50, width = 80;
 
 	public static float rotationX = 0;
 	public static float rotationY = 0;
@@ -55,8 +55,8 @@ public class Game1 : Game{
 		if(Mouse.GetState().LeftButton == ButtonState.Pressed){
 			if(isPainting){
 				try{
-					int i = (int)((Mouse.GetState().Position.X-position.X)/size/scaling);
-					int j = (int)((Mouse.GetState().Position.Y-position.Y)/size/scaling);
+					int i = (int)((Mouse.GetState().Position.X-position.X)/scaling);
+					int j = (int)((Mouse.GetState().Position.Y-position.Y)/scaling);
 					colorList[j*width+i] = selectedColor;
 
 				}catch{}
@@ -157,7 +157,7 @@ public class Game1 : Game{
 		Texture2D texture = new Texture2D(GraphicsDevice, width, height);
 		texture.SetData(colorList);
 
-		_spriteBatch.Begin(transformMatrix: Matrix.CreateScale(scaling*size)*Matrix.CreateRotationZ(rotationZ)*Matrix.CreateRotationY(rotationY)*Matrix.CreateRotationX(rotationX)*Matrix.CreateTranslation(position.X, position.Y, 0), samplerState:  SamplerState.PointClamp);
+		_spriteBatch.Begin(transformMatrix: Matrix.CreateScale(scaling)*Matrix.CreateRotationZ(rotationZ)*Matrix.CreateRotationY(rotationY)*Matrix.CreateRotationX(rotationX)*Matrix.CreateTranslation(position.X, position.Y, 0), samplerState:  SamplerState.PointClamp);
 		_spriteBatch.Draw(texture, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
 		_spriteBatch.End();
 
